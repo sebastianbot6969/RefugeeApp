@@ -18,7 +18,6 @@ namespace RefugeeApp.Models.DTOs
         [Required]
         public int ResidenceId { get; set; }
 
-        // FamilyId kan være null, hvis personen ikke tilhører en familie endnu
         public int? FamilyId { get; set; }
     }
 }

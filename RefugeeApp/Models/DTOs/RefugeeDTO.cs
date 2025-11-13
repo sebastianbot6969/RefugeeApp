@@ -8,7 +8,6 @@ namespace RefugeeApp.Models.DTOs
         public DateTime DateOfBirth { get; set; }
         public int Age { get; set; }
 
-        // Kun referencer – ingen navigation properties
         public string? ResidenceName { get; set; }
         public string? FamilyName { get; set; }
     }

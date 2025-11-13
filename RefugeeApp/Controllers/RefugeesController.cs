@@ -52,7 +52,7 @@ namespace RefugeeApp.Controllers
             return Ok(refugees);
         }
 
-        // NEW: GET: api/refugees/family/byrefugee/{refugeeId}
+        // GET: api/refugees/family/byrefugee/{refugeeId}
         [HttpGet("family/byrefugee/{refugeeId}")]
         public async Task<ActionResult<IEnumerable<Refugee>>> GetFamilyByRefugee(int refugeeId)
         {
@@ -61,8 +61,7 @@ namespace RefugeeApp.Controllers
                 return NotFound();
             return Ok(familyMembers);
         }
-
-        // NEW (optional): GET: api/refugees/search?firstName=...&lastName=...&familyName=...
+        // GET: api/refugees/search
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<Refugee>>> Search([FromQuery] string? firstName, [FromQuery] string? lastName, [FromQuery] string? familyName, [FromQuery] int page = 1, [FromQuery] int pageSize = 50)
         {
@@ -74,11 +73,9 @@ namespace RefugeeApp.Controllers
         [HttpPost]
         public async Task<ActionResult<RefugeeDto>> AddRefugee([FromBody] CreateRefugeeDto dto)
         {
-            // ✅ Basic model validation
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // ✅ Ekstra validering (eksempel)
             if (dto.DateOfBirth > DateTime.Now)
                 return BadRequest("DateOfBirth kan ikke være i fremtiden.");
 
@@ -86,7 +83,6 @@ namespace RefugeeApp.Controllers
 
             await _service.AddAsync(refugee);
 
-            // Returnér DTO tilbage til klienten
             return CreatedAtAction(nameof(GetById), new { id = refugee.Id }, refugee.ToDto());
         }
     }

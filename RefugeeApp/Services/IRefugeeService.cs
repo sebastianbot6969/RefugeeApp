@@ -4,7 +4,6 @@ namespace RefugeeApp.Services
 {
     public interface IRefugeeService
     {
-        // I IRefugeeService
         Task<IEnumerable<Refugee>> GetFamilyByRefugeeAsync(int refugeeId);
         Task<IEnumerable<Refugee>> SearchAsync(string? firstName, string? lastName, string? familyName, int page = 1, int pageSize = 50);
 

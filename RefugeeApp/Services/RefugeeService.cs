@@ -43,23 +43,22 @@ namespace RefugeeApp.Services
 
         public async Task AddAsync(Refugee refugee)
         {
-            // 1️⃣ Validering af basale værdier
+            // Validering af basale værdier
             if (string.IsNullOrWhiteSpace(refugee.FirstName) || string.IsNullOrWhiteSpace(refugee.LastName))
                 throw new ArgumentException("First name and last name cannot be empty.");
 
             if (refugee.DateOfBirth > DateTime.UtcNow)
                 throw new ArgumentException("Date of birth cannot be in the future.");
 
-            // 2️⃣ Validering af Residence
+            // Validering af Residence
             var residenceExists = await _residenceRepository.GetByIdAsync(refugee.ResidenceId);
             if (residenceExists == null)
                 throw new ArgumentException($"Residence with ID {refugee.ResidenceId} does not exist.");
 
 
-            // 4️⃣ Family-håndtering
+            // Family-håndtering
             if (refugee.FamilyId == null || refugee.FamilyId == 0)
             {
-                // Opret ny familie, hvis der ikke findes en
                 var newFamily = new Family { FamilyName = refugee.LastName };
                 newFamily = await _familyRepository.AddAsync(newFamily);
                 refugee.FamilyId = newFamily.Id;
