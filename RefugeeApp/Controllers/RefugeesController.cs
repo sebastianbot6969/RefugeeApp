@@ -81,9 +81,11 @@ namespace RefugeeApp.Controllers
 
             var refugee = dto.ToEntity();
 
-            await _service.AddAsync(refugee);
+            // Her sender vi det ekstra felt videre til service-laget
+            await _service.AddAsync(refugee, dto.RelatedToRefugeeId);
 
             return CreatedAtAction(nameof(GetById), new { id = refugee.Id }, refugee.ToDto());
         }
+
     }
 }

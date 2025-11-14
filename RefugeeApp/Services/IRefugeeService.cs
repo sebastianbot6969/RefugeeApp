@@ -11,6 +11,6 @@ namespace RefugeeApp.Services
         Task<Refugee?> GetByIdAsync(int id);
         Task<IEnumerable<Refugee>> GetByResidenceAsync(int residenceId);
         Task<IEnumerable<Refugee>> GetByFamilyAsync(int familyId);
-        Task AddAsync(Refugee refugee);
+        Task AddAsync(Refugee refugee, int? relatedToRefugeeId);
     }
 }

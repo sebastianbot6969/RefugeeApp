@@ -35,7 +35,6 @@ namespace RefugeeApp.Mappers
                 DateOfBirth = dto.DateOfBirth,
                 Age = age,
                 ResidenceId = dto.ResidenceId,
-                FamilyId = dto.FamilyId
             };
         }
     }

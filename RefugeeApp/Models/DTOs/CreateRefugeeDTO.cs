@@ -18,6 +18,6 @@ namespace RefugeeApp.Models.DTOs
         [Required]
         public int ResidenceId { get; set; }
 
-        public int? FamilyId { get; set; }
+        public int? RelatedToRefugeeId { get; set; }
     }
 }

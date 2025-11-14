@@ -11,5 +11,6 @@ namespace RefugeeApp.Repositories
         Task<IEnumerable<Refugee>> GetFamilyByRefugeeAsync(int refugeeId);
         Task<IEnumerable<Refugee>> SearchAsync(string? firstName, string? lastName, string? familyName, int page, int pageSize);
         Task AddAsync(Refugee refugee);
+        Task UpdateAsync(Refugee refugee);
     }
 }

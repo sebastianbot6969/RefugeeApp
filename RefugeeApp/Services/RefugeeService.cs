@@ -41,28 +41,46 @@ namespace RefugeeApp.Services
         public Task<IEnumerable<Refugee>> GetByFamilyAsync(int familyId)
             => _repository.GetByFamilyAsync(familyId);
 
-        public async Task AddAsync(Refugee refugee)
+        public async Task AddAsync(Refugee refugee, int? relatedToRefugeeId)
         {
-            // Validering af basale værdier
             if (string.IsNullOrWhiteSpace(refugee.FirstName) || string.IsNullOrWhiteSpace(refugee.LastName))
                 throw new ArgumentException("First name and last name cannot be empty.");
 
             if (refugee.DateOfBirth > DateTime.UtcNow)
                 throw new ArgumentException("Date of birth cannot be in the future.");
 
-            // Validering af Residence
+
             var residenceExists = await _residenceRepository.GetByIdAsync(refugee.ResidenceId);
             if (residenceExists == null)
                 throw new ArgumentException($"Residence with ID {refugee.ResidenceId} does not exist.");
 
-
-            // Family-håndtering
-            if (refugee.FamilyId == null || refugee.FamilyId == 0)
+            if (relatedToRefugeeId == null)
             {
-                var newFamily = new Family { FamilyName = refugee.LastName };
-                newFamily = await _familyRepository.AddAsync(newFamily);
-                refugee.FamilyId = newFamily.Id;
+                var fam = new Family { FamilyName = refugee.LastName };
+                fam = await _familyRepository.AddAsync(fam);
+                refugee.FamilyId = fam.Id;
+
+                await _repository.AddAsync(refugee);
+                return;
             }
+
+            var other = await _repository.GetByIdAsync(relatedToRefugeeId.Value)
+                ?? throw new ArgumentException("Related refugee does not exist.");
+
+            if (other.FamilyId == null)
+            {
+                var fam = new Family { FamilyName = other.LastName };
+                fam = await _familyRepository.AddAsync(fam);
+
+                other.FamilyId = fam.Id;
+                refugee.FamilyId = fam.Id;
+
+                await _repository.UpdateAsync(other);
+                await _repository.AddAsync(refugee);
+                return;
+            }
+
+            refugee.FamilyId = other.FamilyId;
             await _repository.AddAsync(refugee);
         }
     }

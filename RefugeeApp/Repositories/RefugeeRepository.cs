@@ -95,5 +95,26 @@ namespace RefugeeApp.Repositories
             _context.Refugees.Add(refugee);
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateAsync(Refugee refugee)
+        {
+            // Hvis entity allerede er tracked, kan vi bare sørge for værdier er sat.
+            // Den sikre måde: attach og sæt state til Modified for de felter der er ændret.
+            var tracked = _context.ChangeTracker.Entries<Refugee>()
+                              .FirstOrDefault(e => e.Entity.Id == refugee.Id);
+
+            if (tracked != null)
+            {
+                // entity er allerede tracked — kopier værdier over eller lad EF håndtere det
+                tracked.CurrentValues.SetValues(refugee);
+            }
+            else
+            {
+                _context.Refugees.Attach(refugee);
+                _context.Entry(refugee).State = EntityState.Modified;
+            }
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
